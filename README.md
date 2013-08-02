@@ -1,6 +1,6 @@
 # Sterilizer
 
-TODO: Write a gem description
+A simple module that extends a String, giving it a `sterilize!` method which to ensure the string is always valid UTF-8
 
 ## Installation
 
@@ -17,8 +17,32 @@ Or install it yourself as:
     $ gem install sterilizer
 
 ## Usage
+Handy when you want to ensure incoming strings will contain invalid characters
+```ruby
 
-TODO: Write usage instructions here
+dodgy_params = {
+  :ok => "Hello",
+  :dodgy => "hi \255",
+  :accented => "\xE9",
+}
+guarantee_strings!(dodgy_params)
+# =>
+    {
+        :ok=>"Hello",
+        :dodgy=>"hi ­"
+        :accented=>"é"
+    }
+
+private
+
+def guarantee_strings!(unclean_params)
+  unclean_params.each do |_,v|
+    v.sterilize!
+  end
+end
+```
+
+It uses the https://github.com/oleander/rchardet gem to guess the character encoding if the string isn't valid when forced to UTF-8
 
 ## Contributing
 

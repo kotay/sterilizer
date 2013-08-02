@@ -20,7 +20,7 @@ module Sterilizer
       # Force it to something else so we can String#encode
       non_default_encoding = find_a_valid_encoding
       force_encoding_with(non_default_encoding)
-    els
+    else
       if valid_when_forced?(self.encoding)
         self.encode!(Encoding.default_internal, self.encoding, { :undef => :replace, :invalid => :replace})
       else
@@ -28,6 +28,8 @@ module Sterilizer
         force_encoding_with(alternative_encoding)
       end
     end
+  rescue
+    self.force_encoding_with("ASCII")
   end
 
   def encoding_is_default?
@@ -60,7 +62,7 @@ module Sterilizer
 
   # Use an external library to attempt to (silently) guess the encoding
   def guess_encoding(guesser = CharDet)
-    Encoding.find(detector.detect(self, :silent => true)["encoding"])
+    Encoding.find(guesser.detect(self, :silent => true)["encoding"])
   end
 
   def force_encoding_with(encoding)
