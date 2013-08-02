@@ -11,7 +11,7 @@ module Sterilizer
     # force to default encoding if valid when forced
     return self.force_encoding(Encoding.default_internal) if valid_when_forced?
 
-    # At this point, we know the string is not valid encoding, it the encoding is UTF-8,
+    # At this point, we know the string is not valid encoding, if the encoding is UTF-8,
     # we must try a different encoding that is valid before forcefully encoding to UTF-8
     # Otherwise, the encoding type is non-default. If it is valid, encode it to UTF-8, otherwise
     # find an alternative before forcefully encoding to UTF-8
