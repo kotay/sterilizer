@@ -1,6 +1,6 @@
 # Sterilizer
 
-A simple module that extends a String, giving it a `sterilize!` method which to ensure the string is always valid UTF-8
+A simple module that extends a String, giving it a `sterilize!` method to ensure the string is always valid UTF-8
 
 ## Installation
 
