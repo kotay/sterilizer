@@ -1,4 +1,4 @@
-Copyright (c) 2013 Ben Thompson
+Copyright (c) 2013 aTech Media Limited.
 
 MIT License
 
