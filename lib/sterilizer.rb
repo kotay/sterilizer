@@ -5,11 +5,15 @@ module Sterilizer
   def sterilize!
 
     return self unless !!defined?(Encoding)
+    
+    # return if valid encoding, simple encode it to UTF-8
+    return self.encode!(default_encoding, self.encoding, { :undef => :replace, :invalid => :replace }) if self.valid_encoding?
+    
     # return if encoding is valid and equal to default_internal
-    return self if valid_when_default?
+    return self if valid_and_default?
 
     # force to default encoding if valid when forced
-    return self.force_encoding(Encoding.default_internal) if valid_when_forced?
+    return self.force_encoding(default_encoding) if valid_when_forced?
 
     # At this point, we know the string is not valid encoding, if the encoding is UTF-8,
     # we must try a different encoding that is valid before forcefully encoding to UTF-8
@@ -22,7 +26,7 @@ module Sterilizer
       force_encoding_with(non_default_encoding)
     else
       if valid_when_forced?(self.encoding)
-        self.encode!(Encoding.default_internal, self.encoding, { :undef => :replace, :invalid => :replace})
+        self.encode!(default_encoding, self.encoding, { :undef => :replace, :invalid => :replace})
       else
         alternative_encoding = find_a_valid_encoding(self.encoding)
         force_encoding_with(alternative_encoding)
@@ -33,18 +37,18 @@ module Sterilizer
   end
 
   def encoding_is_default?
-    self.encoding == Encoding.default_internal
+    self.encoding == default_encoding
   end
 
-  def valid_when_default?
+  def valid_and_default?
     self.valid_encoding? && encoding_is_default?
   end
 
-  def valid_when_forced?(encoding = Encoding.default_internal)
+  def valid_when_forced?(encoding = default_encoding)
     self.dup.force_encoding(encoding).valid_encoding?
   end
 
-  def find_a_valid_encoding(ignoring = [Encoding.default_internal], guessed_already = false)
+  def find_a_valid_encoding(ignoring = [default_encoding], guessed_already = false)
     # If we've already tried to guess the encoding, resort to picking one at random until valid
     if guessed_already
       provisional_encoding = Encoding.list.detect{ |encoding| !ignoring.include?(encoding) }
@@ -66,7 +70,11 @@ module Sterilizer
   end
 
   def force_encoding_with(encoding)
-    self.force_encoding(encoding).encode(Encoding.default_internal, :invalid => :replace, :undef => :replace)
+    self.force_encoding(encoding).encode(default_encoding, :invalid => :replace, :undef => :replace)
+  end
+
+  def default_encoding
+    Encoding.default_internal || "UTF-8"
   end
 
 end
