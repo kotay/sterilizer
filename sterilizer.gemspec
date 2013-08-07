@@ -6,8 +6,8 @@ require 'sterilizer/version'
 Gem::Specification.new do |gem|
   gem.name          = "sterilizer"
   gem.version       = Sterilizer::VERSION
-  gem.authors       = ["Ben Thompson"]
-  gem.email         = ["ben@atechmedia.com"]
+  gem.authors       = ["aTech Media"]
+  gem.email         = ["hello@atechmedia.com"]
   gem.description   = %q{Guarantee a string}
   gem.summary       = %q{}
   gem.homepage      = ""
